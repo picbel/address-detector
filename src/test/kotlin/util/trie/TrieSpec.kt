@@ -1,5 +1,6 @@
 package util.trie
 
+import io.kotest.matchers.shouldBe
 import org.json.JSONObject
 import org.junit.jupiter.api.Test
 
@@ -38,7 +39,7 @@ internal class TrieSpec {
         "서": {
             "울": {
                 "value": "UNKNOWN",
-                "시": {"value": "지입배송"}
+                "시": {"value": "직접배송"}
             },
             "value": "UNKNOWN"
         }
@@ -56,14 +57,19 @@ internal class TrieSpec {
         assert(JSONObject(jsonString).toString() == JSONObject(this.jsonString).toString())
     }
 
-    @DisplayName("가장 많이 매칭돈 문자열의 value를 반환합니다 : ")
+    @DisplayName("가장 많이 매칭된 문자열의 value를 반환합니다 : ")
     @Nested
     inner class FindSimilarValueSpec {
-        @DisplayName("가장 많이 매칭된 문자열의 value를 반환합니다.")
+        @DisplayName("경기도로 조회시 value는 '택배'여야 합니다.")
         @Test
         fun allMatching() {
-            trie.findSimilarValue("경기도")
-            trie.findSimilarValue("서울시")?.let { println("서울시 : $it") }
+            trie.findSimilarValue("경기도") shouldBe "택배"
+        }
+
+        @DisplayName("'서울시강남'으로 조회시 value는 '직접배송'여야 합니다.")
+        @Test
+        fun similarMatching() {
+            trie.findSimilarValue("서울시강남") shouldBe "직접배송"
         }
     }
 
