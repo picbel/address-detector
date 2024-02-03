@@ -1,6 +1,5 @@
 package trie
 
-import org.json.JSONObject
 
 interface Trie {
 
@@ -11,18 +10,13 @@ interface Trie {
     fun findSimilarValue(str: String): String?
 
     /**
-     * @return Trie를 JSON 문자열로 변환합니다.
-     */
-    fun toJsonString(): String
-
-    /**
      * @return Trie를 MutableTrie로 변환합니다.
      */
     fun toMutableTrie(): MutableTrie
 
     companion object {
         fun empty(): Trie = TrieImpl()
-        fun fromJson(jsonStr: String): Trie = TrieImpl(jsonStr)
+//        fun fromJson(jsonStr: String): Trie = TrieImpl(jsonStr)
     }
 }
 
@@ -49,20 +43,13 @@ interface MutableTrie : Trie {
 
     companion object {
         fun empty(): MutableTrie = TrieImpl()
-        fun fromJson(jsonStr: String): MutableTrie = TrieImpl(jsonStr)
+//        fun fromJson(jsonStr: String): MutableTrie = TrieImpl(jsonStr)
     }
 }
 
-private class TrieImpl(
-    jsonStr: String? = null
+internal open class TrieImpl(
 ) : MutableTrie {
     private val root = TrieNode()
-
-    init {
-        if (jsonStr != null) {
-            buildTrieFromJson(JSONObject(jsonStr))
-        }
-    }
 
     override fun findSimilarValue(str: String): String? {
         var currentNode = root
@@ -115,40 +102,10 @@ private class TrieImpl(
         return true
     }
 
-    override fun toJsonString(): String = trieToJson(root).toString()
     override fun toMutableTrie(): MutableTrie = this
-
-
-    // JSON 객체로부터 Trie를 구축하는 수정된 메소드
-    private fun buildTrieFromJson(jsonObject: JSONObject, node: TrieNode = root) {
-        jsonObject.keys().forEach { key ->
-            when (key) {
-                VALUE -> node.value = jsonObject.getString(key) ?: null
-                else -> {
-                    val childNode = TrieNode()
-                    node.children[key[0]] = childNode
-                    buildTrieFromJson(jsonObject.getJSONObject(key), childNode)
-                }
-            }
-        }
-    }
-
-    // Trie를 JSON 객체로 변환하는 메소드
-    private fun trieToJson(node: TrieNode): JSONObject {
-        val jsonObject = JSONObject()
-        node.value?.let { jsonObject.put("value", it) }
-        node.children.forEach { (char, childNode) ->
-            jsonObject.put(char.toString(), trieToJson(childNode))
-        }
-        return jsonObject
-    }
-
-    companion object {
-        private const val VALUE = "value"
-    }
 }
 
-private class TrieNode(
+internal class TrieNode(
     var value: String? = null
 ) {
     val children: MutableMap<Char, TrieNode> = mutableMapOf()
