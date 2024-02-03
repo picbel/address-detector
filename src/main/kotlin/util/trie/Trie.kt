@@ -11,29 +11,37 @@ internal class Trie(
         buildTrieFromJson(JSONObject(jsonStr))
     }
 
-    // Trie를 JSON 문자열로 변환하는 메소드
-    fun toJsonString(): String = trieToJson(root).toString(4)
-
-    fun findSimilarValue(word: String): String? {
+    /**
+     * @param str 비교할 문자열
+     * @return 해당 문자열중 가장 많이 매칭된 문자열의 value를 가져옵니다.
+     */
+    fun findSimilarValue(str: String): String? {
         var currentNode = root
-        for (char in word) {
-            val childNode = currentNode.children[char] ?: return null // 단어가 Trie에 없음
+        var value: String? = null
+        for (char in str) {
+            val childNode = currentNode.children[char] ?: break
+            if (childNode.value != null) value = childNode.value
             currentNode = childNode
         }
-        return currentNode.value
+        return value
     }
 
-//    fun addWord(word: String, value: String) : Boolean{
-//        var currentNode = root
-//        for (char in word) {
-//            val childNode = currentNode.children[char] ?: TrieNode().also { currentNode.children[char] = it }
-//            currentNode = childNode
-//        }
-//        if (currentNode.value != null) return false
-//        currentNode.value = value
-//        return true
-//    }
-//
+    /**
+     * @param str 추가할 단어
+     * @param value 단어에 대응하는 값
+     */
+    fun put(str: String, value: String): Boolean {
+        var currentNode = root
+        for (char in str) {
+            val childNode = currentNode.children[char] ?: TrieNode().also { currentNode.children[char] = it }
+            currentNode = childNode
+        }
+        if (currentNode.value != null) return false
+        currentNode.value = value
+        return true
+    }
+
+    //
 //    fun deleteWord(word: String) : Boolean{
 //        var currentNode = root
 //        for (char in word) {
@@ -43,6 +51,11 @@ internal class Trie(
 //        currentNode.value = null
 //        return true
 //    }
+
+    /**
+     * @return Trie를 JSON 문자열로 변환합니다.
+     */
+    fun toJsonString(): String = trieToJson(root).toString(4)
 
     // JSON 객체로부터 Trie를 구축하는 수정된 메소드
     private fun buildTrieFromJson(jsonObject: JSONObject, node: TrieNode = root) {
