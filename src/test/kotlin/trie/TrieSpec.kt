@@ -1,4 +1,4 @@
-package util.trie
+package trie
 
 import io.kotest.assertions.assertSoftly
 import io.kotest.matchers.shouldBe
@@ -39,7 +39,7 @@ internal class TrieSpec {
     }
     """.trimIndent()
 
-    private val trie = Trie(jsonString)
+    private val trie = Trie.fromJson(jsonString).toMutableTrie()
 
     @DisplayName("Trie를 JSON 문자열로 변환합니다.")
     @Test
@@ -104,6 +104,7 @@ internal class TrieSpec {
                 result shouldBe true
                 trie.findSimilarValue("서울시송파구") shouldBe value
             }
+            listOf<Any>().toMutableList()
         }
 
         @DisplayName("'경상북도'의 value를 '택배'에서 '배송불가'로 변경합니다.'")
