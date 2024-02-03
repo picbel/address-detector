@@ -4,10 +4,6 @@ import org.json.JSONObject
 
 internal class Trie(
     jsonStr: String,
-    /**
-     * Trie에서 value로 취급하지 않을 문자열들
-     */
-    val ignoreValue: List<String> = listOf()
 ) {
     private val root = TrieNode()
 
@@ -52,7 +48,7 @@ internal class Trie(
     private fun buildTrieFromJson(jsonObject: JSONObject, node: TrieNode = root) {
         jsonObject.keys().forEach { key ->
             when (key) {
-                "value" -> node.value = jsonObject.getString(key)
+                "value" -> node.value = jsonObject.getString(key) ?: null
                 else -> {
                     val childNode = TrieNode()
                     node.children[key[0]] = childNode
