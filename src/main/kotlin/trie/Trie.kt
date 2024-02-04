@@ -2,6 +2,7 @@ package trie
 
 
 interface Trie {
+    val root: TrieNode
 
     /**
      * @param str 비교할 문자열
@@ -16,7 +17,6 @@ interface Trie {
 
     companion object {
         fun empty(): Trie = TrieImpl()
-//        fun fromJson(jsonStr: String): Trie = TrieImpl(jsonStr)
     }
 }
 
@@ -43,13 +43,13 @@ interface MutableTrie : Trie {
 
     companion object {
         fun empty(): MutableTrie = TrieImpl()
-//        fun fromJson(jsonStr: String): MutableTrie = TrieImpl(jsonStr)
     }
 }
 
-internal open class TrieImpl(
+internal class TrieImpl(
+    override val root: MutableTrieNode = MutableTrieNode()
 ) : MutableTrie {
-    private val root = TrieNode()
+
 
     override fun findSimilarValue(str: String): String? {
         var currentNode = root
@@ -65,7 +65,7 @@ internal open class TrieImpl(
     override fun put(str: String, value: String): Boolean {
         var currentNode = root
         for (char in str) {
-            val childNode = currentNode.children[char] ?: TrieNode().also { currentNode.children[char] = it }
+            val childNode = currentNode.children[char] ?: MutableTrieNode().also { currentNode.children[char] = it }
             currentNode = childNode
         }
         currentNode.value = value
@@ -74,7 +74,7 @@ internal open class TrieImpl(
 
     override fun remove(str: String): Boolean {
         // 삭제할 문자열의 노드를 저장합니다. first: 문자, second: 부모 노드
-        val nodes = mutableListOf<Pair<Char, TrieNode>>()
+        val nodes = mutableListOf<Pair<Char, MutableTrieNode>>()
         var currentNode = root
         for (char in str) {
             val childNode = currentNode.children[char] ?: return false
@@ -105,9 +105,14 @@ internal open class TrieImpl(
     override fun toMutableTrie(): MutableTrie = this
 }
 
-internal class TrieNode(
-    var value: String? = null
-) {
-    val children: MutableMap<Char, TrieNode> = mutableMapOf()
-    fun hasChildren() = children.isNotEmpty()
+interface TrieNode {
+    val children: Map<Char, TrieNode>
+    val value: String?
+    fun hasChildren(): Boolean = children.isNotEmpty()
+}
+
+internal class MutableTrieNode(
+    override var value: String? = null
+) : TrieNode {
+    override val children: MutableMap<Char, MutableTrieNode> = mutableMapOf()
 }

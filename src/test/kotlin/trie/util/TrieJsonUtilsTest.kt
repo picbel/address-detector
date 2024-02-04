@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import trie.Trie
+import trie.util.TrieJsonUtils.fromJson
 import trie.util.TrieJsonUtils.toJsonString
 
 class TrieJsonUtilsTest {
@@ -38,11 +39,13 @@ class TrieJsonUtilsTest {
     """.trimIndent()
 
     private val trie = Trie.fromJson(jsonString).toMutableTrie()
+
     @DisplayName("Trie를 JSON 문자열로 변환합니다.")
     @Test
     fun toJsonString() {
         // given // when
         val jsonString = trie.toJsonString()
+        println(jsonString)
         // then
         assert(JSONObject(jsonString).toString() == JSONObject(this.jsonString).toString())
     }
