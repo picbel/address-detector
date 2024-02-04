@@ -4,7 +4,7 @@ plugins {
     kotlin("jvm") version "1.9.21"
 }
 
-group = "com.fcfs.coupon"
+group = "com.trie"
 version = "1.0-SNAPSHOT"
 
 repositories {

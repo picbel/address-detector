@@ -6,7 +6,9 @@ import trie.TrieImpl
 import trie.MutableTrieNode
 import trie.TrieNode
 
-
+/**
+ * Trie를 JSON 문자열로 변환하거나 JSON 문자열로부터 Trie를 구축하는 유틸리티 클래스입니다.
+ */
 object TrieJsonUtils {
     private const val VALUE = "value"
 
