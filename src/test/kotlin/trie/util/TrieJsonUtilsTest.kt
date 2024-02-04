@@ -45,7 +45,6 @@ class TrieJsonUtilsTest {
     fun toJsonString() {
         // given // when
         val jsonString = trie.toJsonString()
-        println(jsonString)
         // then
         assert(JSONObject(jsonString).toString() == JSONObject(this.jsonString).toString())
     }
