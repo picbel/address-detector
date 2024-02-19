@@ -29,7 +29,8 @@ JSON에서 Trie 복원:
 
 ```kotlin
 val newTrie = Trie.fromJson(json)
-println(newTrie.search("hello"))
 ```
 
 ---
+
+
