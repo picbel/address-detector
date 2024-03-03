@@ -16,7 +16,7 @@ Trie 생성 및 사용법:
 ```kotlin
 val trie = Trie()
 trie.put("hello", "value")
-trie.findSimlirValue("hello") // value
+trie.findSimilarValue("hello") // value
 ```
 
 Trie를 JSON으로 변환:
